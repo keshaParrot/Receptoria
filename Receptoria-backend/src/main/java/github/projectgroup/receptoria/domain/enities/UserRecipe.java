@@ -27,7 +27,7 @@ public class UserRecipe {
     private int portionSize;
 
     @Enumerated(EnumType.STRING)
-    private github.projectgroup.receptoria.domain.enums.CookingMethod method;
+    private CookingMethod method;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")

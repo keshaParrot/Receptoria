@@ -15,7 +15,8 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private List<UserRecipePreviewDTO> recipes;
+    private List<UserRecipePreviewDTO> recipes; //TODO delete this, we need to fetch recipes separate
     private int followers;
     private int following;
 }
+
