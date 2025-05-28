@@ -1,5 +1,7 @@
 package github.projectgroup.receptoria.utils.result;
 
+import org.springframework.http.HttpStatus;
+
 public class RecipeNotFoundCase implements ResultCase {
 
     private final Long recipeId;
@@ -15,5 +17,10 @@ public class RecipeNotFoundCase implements ResultCase {
     @Override
     public boolean isSuccess() {
         return false;
+    }
+
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.NOT_FOUND;
     }
 }

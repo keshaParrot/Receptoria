@@ -2,24 +2,25 @@ package github.projectgroup.receptoria.utils.result;
 
 import org.springframework.http.HttpStatus;
 
-public class UserNotFoundCase implements ResultCase {
+public class SuccessCase implements ResultCase{
+    private final String message;
 
-    private final Long userId;
-
-    public UserNotFoundCase(Long userId) {
-        this.userId = userId;
+    public SuccessCase(String message) {
+        this.message = message;
     }
+
     @Override
     public String getCaseMessage() {
-        return "User with id:"+ userId +"not found";
+        return message;
     }
 
     @Override
     public boolean isSuccess() {
-        return false;
+        return true;
     }
+
     @Override
     public HttpStatus getHttpStatus() {
-        return HttpStatus.NOT_FOUND;
+        return HttpStatus.OK;
     }
 }

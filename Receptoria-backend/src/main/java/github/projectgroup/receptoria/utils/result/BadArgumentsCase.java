@@ -2,16 +2,17 @@ package github.projectgroup.receptoria.utils.result;
 
 import org.springframework.http.HttpStatus;
 
-public class UserNotFoundCase implements ResultCase {
+public class BadArgumentsCase implements ResultCase{
 
-    private final Long userId;
+    private final String message;
 
-    public UserNotFoundCase(Long userId) {
-        this.userId = userId;
+    public BadArgumentsCase(String message) {
+        this.message = message;
     }
+
     @Override
     public String getCaseMessage() {
-        return "User with id:"+ userId +"not found";
+        return message;
     }
 
     @Override
@@ -20,6 +21,6 @@ public class UserNotFoundCase implements ResultCase {
     }
     @Override
     public HttpStatus getHttpStatus() {
-        return HttpStatus.NOT_FOUND;
+        return HttpStatus.BAD_GATEWAY;
     }
 }
