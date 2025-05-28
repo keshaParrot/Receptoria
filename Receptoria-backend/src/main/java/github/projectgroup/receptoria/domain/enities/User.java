@@ -1,5 +1,6 @@
 package github.projectgroup.receptoria.domain.enities;
 
+import github.projectgroup.receptoria.domain.enums.MealCategory;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties;
@@ -22,6 +23,12 @@ public class User {
     private String email;
     private String username;
     private String password;
+
+    @ElementCollection(targetClass = MealCategory.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "recipe_meal_categories", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "meal_category")
+    private List<MealCategory> mainMealCategories;
 
     @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers;

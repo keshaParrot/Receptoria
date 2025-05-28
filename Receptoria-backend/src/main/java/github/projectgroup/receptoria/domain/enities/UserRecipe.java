@@ -1,6 +1,7 @@
 package github.projectgroup.receptoria.domain.enities;
 
 import github.projectgroup.receptoria.domain.enums.CookingMethod;
+import github.projectgroup.receptoria.domain.enums.MealCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,8 @@ public class UserRecipe {
 
     @Enumerated(EnumType.STRING)
     private CookingMethod method;
+    @Enumerated(EnumType.STRING)
+    private MealCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
