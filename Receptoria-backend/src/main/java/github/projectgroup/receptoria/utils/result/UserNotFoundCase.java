@@ -1,5 +1,7 @@
 package github.projectgroup.receptoria.utils.result;
 
+import org.springframework.http.HttpStatus;
+
 public class UserNotFoundCase implements ResultCase {
 
     private final Long userId;
@@ -15,5 +17,9 @@ public class UserNotFoundCase implements ResultCase {
     @Override
     public boolean isSuccess() {
         return false;
+    }
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.NOT_FOUND;
     }
 }

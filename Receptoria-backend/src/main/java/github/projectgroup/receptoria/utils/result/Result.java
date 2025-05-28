@@ -1,7 +1,11 @@
 package github.projectgroup.receptoria.utils.result;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
 public class Result<T> {
 
+    @Getter
     private T value;
     private ResultCase resultCase;
 
@@ -18,15 +22,19 @@ public class Result<T> {
         return new Result<T>(null, resultCase);
     }
 
-    public T getValue() {
-        return value;
-    }
-
     public String getMessage(){
         return resultCase.getCaseMessage();
     }
 
+    public HttpStatus getHttpStatus(){
+        return resultCase.getHttpStatus();
+    }
+
     public boolean isSuccess(){
         return resultCase.isSuccess();
+    }
+
+    public boolean isCaseInstanceOf(Class<? extends ResultCase> clazz){
+        return clazz.isInstance(resultCase);
     }
 }
