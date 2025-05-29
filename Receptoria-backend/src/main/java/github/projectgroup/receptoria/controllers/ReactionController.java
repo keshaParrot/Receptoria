@@ -1,6 +1,6 @@
 package github.projectgroup.receptoria.controllers;
 
-import github.projectgroup.receptoria.domain.enities.Reaction;
+import github.projectgroup.receptoria.model.enities.Reaction;
 
 public class ReactionController {
 
