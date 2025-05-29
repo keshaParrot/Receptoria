@@ -11,11 +11,7 @@ import org.springframework.data.domain.Pageable;
 public interface UserService {
 
     Result<UserDTO> getById(Long id);
-
-    Result<Void> setVerifiedStatus(Long Id);
-
     Result<UserDTO> updateById(Long id, UserUpdateRequest request);
-    Result<Void> changePassword(String token, ChangePasswordRequest request);
     Page<UserDTO> findBy(
             String name,
             MealCategory[] MainCategory,

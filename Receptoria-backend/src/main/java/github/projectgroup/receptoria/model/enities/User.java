@@ -3,8 +3,14 @@ package github.projectgroup.receptoria.model.enities;
 import github.projectgroup.receptoria.model.enums.MealCategory;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 @Entity
 @ToString
@@ -14,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class User implements Ownable{
+public class User implements Ownable, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,5 +56,11 @@ public class User implements Ownable{
     @Override
     public Long getOwnerIdentifier() {
         return id;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
     }
 }
