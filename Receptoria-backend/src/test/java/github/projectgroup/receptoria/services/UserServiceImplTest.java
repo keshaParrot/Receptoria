@@ -1,9 +1,9 @@
 package github.projectgroup.receptoria.services;
 
-import github.projectgroup.receptoria.domain.dtos.UserDTO;
-import github.projectgroup.receptoria.domain.dtos.UserUpdateRequest;
-import github.projectgroup.receptoria.domain.enities.User;
-import github.projectgroup.receptoria.domain.mappers.UserMapper;
+import github.projectgroup.receptoria.model.dtos.UserDTO;
+import github.projectgroup.receptoria.model.dtos.UserUpdateRequest;
+import github.projectgroup.receptoria.model.enities.User;
+import github.projectgroup.receptoria.model.mappers.UserMapper;
 import github.projectgroup.receptoria.repositories.UserRepository;
 import github.projectgroup.receptoria.utils.result.Result;
 import github.projectgroup.receptoria.utils.result.UserNotFoundCase;
@@ -108,7 +108,7 @@ class UserServiceImplTest {
         when(userRepository.findByFullNameAndCategories(eq("Іван"), any(), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(user)));
 
-        Page<UserDTO> page = userService.findBy("Іван", new github.projectgroup.receptoria.domain.enums.MealCategory[]{}, Pageable.unpaged());
+        Page<UserDTO> page = userService.findBy("Іван", new github.projectgroup.receptoria.model.enums.MealCategory[]{}, Pageable.unpaged());
 
         assertEquals(1, page.getContent().size());
     }

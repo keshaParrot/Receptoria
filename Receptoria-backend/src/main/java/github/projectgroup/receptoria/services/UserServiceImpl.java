@@ -1,11 +1,11 @@
 package github.projectgroup.receptoria.services;
 
-import github.projectgroup.receptoria.domain.dtos.ChangePasswordRequest;
-import github.projectgroup.receptoria.domain.dtos.UserDTO;
-import github.projectgroup.receptoria.domain.dtos.UserUpdateRequest;
-import github.projectgroup.receptoria.domain.enities.User;
-import github.projectgroup.receptoria.domain.enums.MealCategory;
-import github.projectgroup.receptoria.domain.mappers.UserMapper;
+import github.projectgroup.receptoria.model.dtos.ChangePasswordRequest;
+import github.projectgroup.receptoria.model.dtos.UserDTO;
+import github.projectgroup.receptoria.model.dtos.UserUpdateRequest;
+import github.projectgroup.receptoria.model.enities.User;
+import github.projectgroup.receptoria.model.enums.MealCategory;
+import github.projectgroup.receptoria.model.mappers.UserMapper;
 import github.projectgroup.receptoria.repositories.UserRepository;
 import github.projectgroup.receptoria.services.interfaces.UserService;
 import github.projectgroup.receptoria.utils.result.Result;
@@ -14,6 +14,7 @@ import github.projectgroup.receptoria.utils.result.UserNotFoundCase;
 import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

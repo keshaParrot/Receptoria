@@ -1,7 +1,7 @@
 package github.projectgroup.receptoria.repositories;
 
-import github.projectgroup.receptoria.domain.enities.User;
-import github.projectgroup.receptoria.domain.enums.MealCategory;
+import github.projectgroup.receptoria.model.enities.User;
+import github.projectgroup.receptoria.model.enums.MealCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                            @Param("categories") MealCategory[] categories,
                                            Pageable pageable);
 
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
+    Optional<User> findByUsername(String username);
 }

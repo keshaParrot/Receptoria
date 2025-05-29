@@ -1,8 +1,7 @@
 package github.projectgroup.receptoria.controllers;
 
-import github.projectgroup.receptoria.domain.dtos.UserRecipePreviewDTO;
-import github.projectgroup.receptoria.domain.enities.UserRecipe;
-import github.projectgroup.receptoria.domain.enums.Followtype;
+import github.projectgroup.receptoria.model.dtos.UserRecipePreviewDTO;
+import github.projectgroup.receptoria.model.enities.UserRecipe;
 import org.springframework.data.domain.Page;
 
 public class RecipeController {

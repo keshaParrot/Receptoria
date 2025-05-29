@@ -1,6 +1,6 @@
 package github.projectgroup.receptoria.controllers;
 
-import github.projectgroup.receptoria.domain.dtos.NotificationDTO;
+import github.projectgroup.receptoria.model.dtos.NotificationDTO;
 import org.springframework.data.domain.Page;
 
 public class NotificationController {
