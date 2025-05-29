@@ -46,6 +46,13 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         userRepository.save(user);
+
+        Result<VerificationCode> codeResult = verificationCodeService.generateVerificationCode(
+                user.getEmail(),
+                SendTo.EMAIL,
+                VerificationCodeType.VERIFICATION_MAIL);
+        notificationService.sendVerificationCode(codeResult.getValue(),user.getEmail());
+
         return Result.success(null,new SuccessCase("User successfully registered"));
     }
 

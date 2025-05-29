@@ -1,4 +1,4 @@
-package github.projectgroup.receptoria.utils.mailtemplates;
+package github.projectgroup.receptoria.utils.Templates.mail;
 
 public interface MailHtmlTemplates {
     String getSubject();

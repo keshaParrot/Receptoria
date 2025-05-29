@@ -1,4 +1,4 @@
-package github.projectgroup.receptoria.utils.mailtemplates;
+package github.projectgroup.receptoria.utils.Templates.mail;
 
 public class EmailConfirmationHtmlTemplatesImpl implements MailHtmlTemplates {
     @Override
