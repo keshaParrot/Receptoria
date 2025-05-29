@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("""
     SELECT DISTINCT u FROM User u
     JOIN u.mainMealCategories c
-    WHERE CONCAT(u.firstName, ' ', u.lastName) LIKE %:name%
+    WHERE u.username LIKE %:name%
     AND c IN :categories
 """)
     Page<User> findByFullNameAndCategories(@Param("name") String name,
@@ -27,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
 }

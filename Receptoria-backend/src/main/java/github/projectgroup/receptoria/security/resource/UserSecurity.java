@@ -21,10 +21,5 @@ public class UserSecurity extends AbstractDomainSecurity<User, Long> {
     protected JpaRepository<User, Long> repository() {
         return userRepository;
     }
-
-    @Override
-    protected Function<User, String> ownerExtractor() {
-        return User::getEmail;
-    }
 }
 

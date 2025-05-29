@@ -4,10 +4,12 @@ import github.projectgroup.receptoria.model.dtos.ChangePasswordRequest;
 import github.projectgroup.receptoria.model.dtos.UserDTO;
 import github.projectgroup.receptoria.model.dtos.UserUpdateRequest;
 import github.projectgroup.receptoria.model.enities.User;
+import github.projectgroup.receptoria.model.enities.UserRecipe;
 import github.projectgroup.receptoria.model.enums.MealCategory;
 import github.projectgroup.receptoria.model.mappers.UserMapper;
 import github.projectgroup.receptoria.repositories.UserRepository;
 import github.projectgroup.receptoria.services.interfaces.UserService;
+import github.projectgroup.receptoria.utils.result.BadArgumentsCase;
 import github.projectgroup.receptoria.utils.result.Result;
 import github.projectgroup.receptoria.utils.result.SuccessCase;
 import github.projectgroup.receptoria.utils.result.UserNotFoundCase;
@@ -36,19 +38,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result<Void> setVerifiedStatus(Long Id) {
-        Optional<User> otpUser = userRepository.findById(Id);
-        if (otpUser.isPresent()) {
-            User user = otpUser.get();
-            user.setVerified(true);
-            userRepository.save(user);
-
-            return Result.success(null, new SuccessCase("User verify mail successfully"));
-        }
-       return Result.failure(new UserNotFoundCase(Id));
-    }
-
-    @Override
     public Result<UserDTO> updateById(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElse(null);
         int updatedCounter = 0;
@@ -62,8 +51,15 @@ public class UserServiceImpl implements UserService {
                 user.setLastName(request.getLastName());
                 updatedCounter++;
             }
-            if (request.getEmail() != null){
+            if (request.getEmail() != null ){
+                if (userRepository.findByEmail(request.getEmail()).isPresent()){
+                    return Result.failure(new BadArgumentsCase("There is already a user with this email in the system"));
+                }
                 user.setEmail(request.getEmail());
+                updatedCounter++;
+            }
+            if (!request.getMainMealCategories().isEmpty()){
+                user.setMainMealCategories(request.getMainMealCategories());
                 updatedCounter++;
             }
             return Result.success(
@@ -75,12 +71,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return Result.failure(new UserNotFoundCase(id));
-    }
-
-    @SneakyThrows
-    @Override
-    public Result<Void> changePassword(String token, ChangePasswordRequest request) {
-        throw new ExecutionControl.NotImplementedException("nope");
     }
 
     @Override

@@ -51,13 +51,4 @@ public class UserController {
                 )
         );
     }
-
-    @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(
-            @RequestParam("token") String token,
-            @RequestBody ChangePasswordRequest request)
-    {
-        return ResultMapper.toResponseEntity(userService.changePassword(token,request));
-    }
-
 }

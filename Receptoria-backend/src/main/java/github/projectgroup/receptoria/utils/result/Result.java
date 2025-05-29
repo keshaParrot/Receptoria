@@ -38,6 +38,10 @@ public class Result<T> {
         return clazz.isInstance(resultCase);
     }
 
+    public ResultCase getResultCase(){
+        return resultCase;
+    }
+
     public boolean isValuePresent() {
         return value != null;
     }

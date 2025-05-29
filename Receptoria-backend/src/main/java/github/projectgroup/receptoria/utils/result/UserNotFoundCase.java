@@ -4,14 +4,22 @@ import org.springframework.http.HttpStatus;
 
 public class UserNotFoundCase implements ResultCase {
 
-    private final Long userId;
+    private Long userId;
+    private String email;
 
     public UserNotFoundCase(Long userId) {
         this.userId = userId;
     }
+
+    public UserNotFoundCase(String email) {
+        this.email = email;
+    }
+
     @Override
     public String getCaseMessage() {
-        return "User with id:"+ userId +"not found";
+        if (userId != null) return "User with id:"+ userId +"not found";
+        else return "User with email:"+ email +" not found";
+
     }
 
     @Override
