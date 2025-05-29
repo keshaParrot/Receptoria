@@ -5,8 +5,11 @@ import github.projectgroup.receptoria.model.dtos.LoginRequest;
 import github.projectgroup.receptoria.model.dtos.UserRegisterRequest;
 import github.projectgroup.receptoria.model.mappers.ResultMapper;
 import github.projectgroup.receptoria.services.interfaces.AuthService;
+import github.projectgroup.receptoria.utils.Templates.html.VerificationMail;
+import github.projectgroup.receptoria.utils.result.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,11 +44,11 @@ public class AuthController {
         return ResultMapper.toResponseEntity(authService.changePassword(token, request));
     }
 
-    @GetMapping("/validate-mail")
-    public ResponseEntity<?> validateMail(
-            @RequestParam("token") String token) {
-
-        return ResultMapper.toResponseEntity(authService.validateMail(token));
+    @GetMapping(value = "/validate-mail", produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<String> validateMail(@RequestParam("token") String token) {
+        Result<Void> result = authService.validateMail(token);
+        return ResponseEntity.ok(VerificationMail.generateValidationResponsePage(result.isSuccess()));
     }
+
 }
 

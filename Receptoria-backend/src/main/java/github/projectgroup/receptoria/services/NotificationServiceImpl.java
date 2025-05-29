@@ -4,9 +4,9 @@ import github.projectgroup.receptoria.model.enities.VerificationCode;
 import github.projectgroup.receptoria.model.enums.VerificationCodeType;
 import github.projectgroup.receptoria.services.interfaces.DeliveryChannelResolver;
 import github.projectgroup.receptoria.services.interfaces.NotificationService;
-import github.projectgroup.receptoria.utils.mailtemplates.EmailConfirmationHtmlTemplatesImpl;
-import github.projectgroup.receptoria.utils.mailtemplates.PasswordResetHtmlTemplatesImpl;
-import github.projectgroup.receptoria.utils.mailtemplates.MailHtmlTemplates;
+import github.projectgroup.receptoria.utils.Templates.mail.EmailConfirmationHtmlTemplatesImpl;
+import github.projectgroup.receptoria.utils.Templates.mail.PasswordResetHtmlTemplatesImpl;
+import github.projectgroup.receptoria.utils.Templates.mail.MailHtmlTemplates;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
