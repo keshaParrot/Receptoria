@@ -30,8 +30,8 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
     public Result<VerificationCode> generateVerificationCode(String email, SendTo channel, VerificationCodeType codeType) {
         Optional<User> user = userRepository.findByEmail(email);
         String token = codeType == VerificationCodeType.VERIFICATION_MAIL
-                ? generateVerificationCode()
-                : UUID.randomUUID().toString();
+                ? UUID.randomUUID().toString()
+                : generateVerificationCode();
 
         if (user.isPresent()) {
             VerificationCode code = VerificationCode.builder()

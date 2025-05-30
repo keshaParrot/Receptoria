@@ -1,6 +1,8 @@
 package github.projectgroup.receptoria.utils.Templates.mail;
 
 public class EmailConfirmationHtmlTemplatesImpl implements MailHtmlTemplates {
+
+    private final String link = "http://localhost:8080/api/v1/auth/validate-mail?token=";
     @Override
     public String getSubject() {
         return "Email Confirmation";
@@ -27,6 +29,6 @@ public class EmailConfirmationHtmlTemplatesImpl implements MailHtmlTemplates {
             </div>
         </body>
         </html>
-    """.formatted(code);
+    """.formatted(link+code);
     }
 }

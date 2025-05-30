@@ -48,9 +48,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(entryPoint))
                 .authorizeHttpRequests(auth -> auth
-                        // позволяем *все* методы AuthController без токена
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        // если у вас есть статические ресурсы или swagger — тоже можно сюда добавить
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
