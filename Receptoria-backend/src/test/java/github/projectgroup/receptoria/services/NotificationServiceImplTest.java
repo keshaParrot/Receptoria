@@ -113,7 +113,6 @@ class NotificationServiceImplTest {
         when(userRepository.findById(10L)).thenReturn(Optional.of(targetUser));
         when(userRepository.findById(20L)).thenReturn(Optional.of(initiator));
 
-        // Simulate existing notification with non-null initiators
         Notification existing = Notification.builder()
                 .id(100L)
                 .user(targetUser)
