@@ -1,10 +1,13 @@
 package github.projectgroup.receptoria.model.enities;
 
+import github.projectgroup.receptoria.model.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @ToString
@@ -18,22 +21,23 @@ public class Notification implements Ownable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Enumerated(EnumType.STRING)
-    private github.projectgroup.receptoria.model.enums.NotificationType type;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_id")
+    @Embedded
     private NotificationTarget target;
-
-    private Long relatedObjectId;
-    private int counter;
-    private boolean isSent;
+    private Boolean isSent = false;
     private LocalDateTime createdAt;
     private LocalDateTime lastInteraction;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "notification_initiators",
+            joinColumns = @JoinColumn(name = "notification_id"),
+            inverseJoinColumns = @JoinColumn(name = "initiator_user_id")
+    )
+    private Set<User> initiators = new HashSet<>();
 
     @Override
     public Long getOwnerIdentifier() {

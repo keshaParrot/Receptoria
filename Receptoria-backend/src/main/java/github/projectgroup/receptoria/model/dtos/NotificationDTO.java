@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import github.projectgroup.receptoria.model.enums.NotificationType;
 
 @Data
@@ -19,4 +21,5 @@ public class NotificationDTO {
     private Long relatedObjectId;
     private String content;
     private LocalDateTime createdAt;
+    private List<UserPreviewDTO> initiators;
 }
