@@ -1,9 +1,13 @@
 package github.projectgroup.receptoria.model.enities;
 
+import github.projectgroup.receptoria.model.enums.NotificationType;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.*;
 
-@Entity
+import static github.projectgroup.receptoria.model.enums.NotificationType.*;
+
+@Embeddable
 @ToString
 @Getter
 @Setter
@@ -11,9 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationTarget {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String url;
+
+    private Long objectId;
+    private NotificationType type;
 }

@@ -3,6 +3,7 @@ package github.projectgroup.receptoria.controllers;
 import github.projectgroup.receptoria.model.enums.Followtype;
 import org.springframework.data.domain.Page;
 
+
 public class FollowerController {
 
     public Page<String> getAllByFollowType(Long userId, Followtype followtype){
