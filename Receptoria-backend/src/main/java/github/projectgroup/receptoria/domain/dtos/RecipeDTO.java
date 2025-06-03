@@ -1,38 +1,46 @@
 package github.projectgroup.receptoria.domain.dtos;
 
-import github.projectgroup.receptoria.domain.enities.Reaction;
+import java.util.List;
+
+
 import github.projectgroup.receptoria.domain.enities.RecipeIngredients;
 import github.projectgroup.receptoria.domain.enities.RecipePhoto;
-import github.projectgroup.receptoria.domain.enities.User;
 import github.projectgroup.receptoria.domain.enums.CookingMethod;
 import github.projectgroup.receptoria.domain.enums.MealCategory;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRecipeDTO {
+public class RecipeDTO {
 
+    /** Унікальний ідентифікатор */
     private Long id;
+
+    /** Список інгредієнтів */
     private List<RecipeIngredients> ingredients;
 
+    /** Опис рецепту */
     private String description;
-    private String instructions;
+
+    /** Інструкція з приготування */
+    private String instruction;
+
+    /** Розмір порції */
     private int portionSize;
 
+    /** Метод приготування */
     private CookingMethod method;
+
+    /** Категорія прийому їжі */
     private MealCategory category;
 
+    /** Хто створив рецепт */
     private UserPreviewDTO owner;
-    private UserPreviewDTO coOwner;
 
+    /** Співвласник (якщо є) */
+    private UserPreviewDTO coOwner;
     private List<RecipePhoto> photos;
-    private List<ReactionDTO> reactions;
 }

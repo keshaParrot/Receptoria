@@ -1,5 +1,6 @@
 package github.projectgroup.receptoria.domain.dtos;
 
+import github.projectgroup.receptoria.domain.enities.RecipeIngredients;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import github.projectgroup.receptoria.domain.enums.CookingMethod;
 @AllArgsConstructor
 @Builder
 public class CreateRecipeRequest {
-    private List<RecipeIngredientDTO> ingredients;
+    private List<RecipeIngredients> ingredients;
     private List<String> photoPaths;
     private String description;
     private int portionSize;
