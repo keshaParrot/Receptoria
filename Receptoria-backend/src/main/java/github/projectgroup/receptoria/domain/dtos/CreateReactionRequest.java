@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class CreateReactionRequest {
     private float rating;
     private Long ownerId;
+    private String content;
     private Long ratedRecipeId;
 }
