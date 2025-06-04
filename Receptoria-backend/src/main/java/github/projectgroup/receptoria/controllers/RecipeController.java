@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,12 +71,15 @@ public class RecipeController {
         return ResultMapper.toResponseEntity(recipeService.getById(id));
     }
 
+    @PreAuthorize("@userSecurity.canEdit(authentication, #id)")
     @PutMapping("/{id}")
-    public ResponseEntity<UserRecipePreviewDTO> update(
+    public ResponseEntity<?> update(
             @PathVariable Long id,
-            @RequestBody UserRecipePreviewDTO dto
+            @RequestPart("data") @Valid CreateRecipeRequest dto,
+            @RequestPart(value = "photos", required = false) List<MultipartFile> photos
     ) {
-        throw new RuntimeException("not implemented yet");
+        dto.setPhotos(photos);
+        return ResultMapper.toResponseEntity(recipeService.update(id, dto));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -88,6 +92,7 @@ public class RecipeController {
         return ResultMapper.toResponseEntity(recipeService.create(dto));
     }
 
+    @PreAuthorize("@userSecurity.canEdit(authentication, #id)")
     @PutMapping(path = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateRecipe(
             @PathVariable Long id,
@@ -97,6 +102,7 @@ public class RecipeController {
         return ResultMapper.toResponseEntity(recipeService.update(id,request));
     }
 
+    @PreAuthorize("@userSecurity.canEdit(authentication, #id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecipe(
             @PathVariable Long id
@@ -109,6 +115,7 @@ public class RecipeController {
         }
     }
 
+    @PreAuthorize("@userSecurity.canEdit(authentication, #id)")
     @PatchMapping("/{id}/public")
     public ResponseEntity<Void> setPublicStatus(
             @PathVariable Long id,
