@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        Базовый стиль всего приложения. В AndroidManifest.xml он указан как:
+            android:theme="@style/ReceptoriaTheme"
+        Вместо Theme.Material3.* используем Theme.MaterialComponents.*,
+        т.к. именно библиотека com.google.android.material:material даёт
+        XML-ресурсы, содержащие Theme.MaterialComponents.*
+
+        Если вы хотите использовать DayNight-режим + убрать ActionBar,
+        берём наследника NoActionBar:
+    -->
+    <style name="ReceptoriaTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!--
+            Атрибут colorSurface (и другие атрибуты Material) будут взяты из
+            библиотеки com.google.android.material:material.
+        -->
+        <item name="android:windowBackground">?attr/colorSurface</item>
+    </style>
+
+</resources>
