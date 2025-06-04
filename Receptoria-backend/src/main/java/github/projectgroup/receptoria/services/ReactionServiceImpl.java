@@ -2,6 +2,7 @@ package github.projectgroup.receptoria.services;
 
 import github.projectgroup.receptoria.domain.dtos.CreateReactionRequest;
 import github.projectgroup.receptoria.domain.dtos.ReactionDTO;
+import github.projectgroup.receptoria.domain.dtos.RecipeDTO;
 import github.projectgroup.receptoria.domain.dtos.UserPreviewDTO;
 import github.projectgroup.receptoria.domain.enities.Reaction;
 import github.projectgroup.receptoria.domain.enities.User;
@@ -11,12 +12,17 @@ import github.projectgroup.receptoria.repositories.UserRepository;
 import github.projectgroup.receptoria.repositories.RecipeRepository;
 import github.projectgroup.receptoria.services.interfaces.ReactionService;
 
+import github.projectgroup.receptoria.utils.result.ReactionNotFoundCase;
+import github.projectgroup.receptoria.utils.result.Result;
+import github.projectgroup.receptoria.utils.result.SuccessCase;
+import github.projectgroup.receptoria.utils.result.UserNotFoundCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +34,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public Page<ReactionDTO> getByRecipeId(Long recipeId, Pageable pageable) {
-        if (!recipeRepository.existsById(recipeId)) {
-            throw new IllegalArgumentException("Recipe not found: " + recipeId);
-        }
-
         return reactionRepository
                 .findAllByRatedRecipeId(recipeId, pageable)
                 .map(this::toDto);
@@ -39,10 +41,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public Page<ReactionDTO> getByUserId(Long userId, Pageable pageable) {
-        if (!userRepository.existsById(userId)) {
-            throw new IllegalArgumentException("User not found: " + userId);
-        }
-
         return reactionRepository
                 .findAllByOwnerId(userId, pageable)
                 .map(this::toDto);
@@ -50,9 +48,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public float getRecipeRating(Long recipeId) {
-        if (!recipeRepository.existsById(recipeId)) {
-            throw new IllegalArgumentException("Recipe not found: " + recipeId);
-        }
 
         List<Reaction> reactions = reactionRepository.findAllByRatedRecipeId(recipeId, Pageable.unpaged()).getContent();
         if (reactions.isEmpty()) {
@@ -66,11 +61,11 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public boolean create(CreateReactionRequest request) {
-        User owner = userRepository.findById(request.getOwnerId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "User not found: " + request.getOwnerId()
-                ));
+    public Result<ReactionDTO> create(CreateReactionRequest request) {
+        Optional<User> owner = userRepository.findById(request.getOwnerId());
+        if(owner.isEmpty()){
+            return Result.failure(new UserNotFoundCase(request.getOwnerId()));
+        }
 
         UserRecipe recipe = recipeRepository.findById(request.getRatedRecipeId())
                 .orElseThrow(() -> new IllegalArgumentException(
@@ -80,24 +75,23 @@ public class ReactionServiceImpl implements ReactionService {
         Reaction reaction = Reaction.builder()
                 .reactionValue(request.getRating())
                 .content(request.getContent())
-                .owner(owner)
+                .owner(owner.get())
                 .ratedRecipe(recipe)
                 .build();
 
         reactionRepository.save(reaction);
-        return true;
+        return Result.success(toDto(reaction), new SuccessCase("good"));
     }
 
     @Override
-    public boolean update(Long id, float newRating) {
-        Reaction existing = reactionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Reaction not found: " + id
-                ));
-
-        existing.setReactionValue(newRating);
-        reactionRepository.save(existing);
-        return true;
+    public Result<ReactionDTO> update(Long id, float newRating) {
+        Optional<Reaction> existing = reactionRepository.findById(id);
+        if(existing.isEmpty()){
+            return Result.failure(new ReactionNotFoundCase(id));
+        }
+        existing.get().setReactionValue(newRating);
+        reactionRepository.save(existing.get());
+        return Result.success(toDto(existing.get()), new SuccessCase("good"));
     }
 
     @Override

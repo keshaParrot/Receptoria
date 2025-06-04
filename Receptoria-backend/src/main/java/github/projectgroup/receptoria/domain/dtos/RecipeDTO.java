@@ -15,31 +15,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RecipeDTO {
 
-    /** Унікальний ідентифікатор */
     private Long id;
-
-    /** Список інгредієнтів */
     private List<RecipeIngredients> ingredients;
-
-    /** Опис рецепту */
     private String description;
-
-    /** Інструкція з приготування */
     private String instruction;
-
-    /** Розмір порції */
     private int portionSize;
-
-    /** Метод приготування */
     private CookingMethod method;
-
-    /** Категорія прийому їжі */
     private MealCategory category;
-
-    /** Хто створив рецепт */
     private UserPreviewDTO owner;
-
-    /** Співвласник (якщо є) */
     private UserPreviewDTO coOwner;
     private List<RecipePhotoInfo> photos;
 }
