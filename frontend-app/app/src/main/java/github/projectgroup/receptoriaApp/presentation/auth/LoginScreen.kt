@@ -1,6 +1,5 @@
 package github.projectgroup.receptoriaApp.presentation.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,12 +13,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import github.projectgroup.receptoriaApp.ui.theme.Orange500
@@ -55,7 +52,7 @@ fun LoginScreen(
             ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        
+
         Text(
             text = "Ласкаво просимо!",
             style = MaterialTheme.typography.bodyLarge,
@@ -81,7 +78,6 @@ fun LoginScreen(
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold
                     ),
-                    textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -188,6 +184,18 @@ fun LoginScreen(
                     fontWeight = FontWeight.Medium
                 )
             }
+        }
+
+        // Тестовая кнопка для разработки
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedButton(
+            onClick = { onLoginClick("test_user", "password") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+            )
+        ) {
+            Text("Тестовый вход")
         }
     }
 }
