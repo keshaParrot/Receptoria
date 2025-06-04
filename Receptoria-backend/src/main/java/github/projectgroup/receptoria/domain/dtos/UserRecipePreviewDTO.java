@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class UserRecipePreviewDTO {
     private Long id;
     private String title;
-    private String previewPhotoUrl;
+    private RecipePhotoInfo photo;
     private float averageRating;
 }

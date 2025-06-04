@@ -5,6 +5,7 @@ import github.projectgroup.receptoria.domain.enums.MealCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -44,8 +45,13 @@ public class UserRecipe {
     @OneToMany(mappedBy = "ratedRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reaction> reactions;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipePhoto> photos;
+    @ElementCollection
+    @CollectionTable(
+            name = "recipe_photos",
+            joinColumns = @JoinColumn(name = "recipe_id")
+    )
+    @Column(name = "photo_path", nullable = false)
+    private List<String> photoPaths = new ArrayList<>();
 
     private boolean isPublic;
 }

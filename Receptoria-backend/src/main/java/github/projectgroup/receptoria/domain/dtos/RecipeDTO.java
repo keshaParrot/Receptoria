@@ -4,7 +4,6 @@ import java.util.List;
 
 
 import github.projectgroup.receptoria.domain.enities.RecipeIngredients;
-import github.projectgroup.receptoria.domain.enities.RecipePhoto;
 import github.projectgroup.receptoria.domain.enums.CookingMethod;
 import github.projectgroup.receptoria.domain.enums.MealCategory;
 import lombok.AllArgsConstructor;
@@ -42,5 +41,5 @@ public class RecipeDTO {
 
     /** Співвласник (якщо є) */
     private UserPreviewDTO coOwner;
-    private List<RecipePhoto> photos;
+    private List<RecipePhotoInfo> photos;
 }

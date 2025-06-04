@@ -1,15 +1,16 @@
 package github.projectgroup.receptoria.services;
 
+import github.projectgroup.receptoria.domain.mappers.RecipeMapper;
+import github.projectgroup.receptoria.utils.result.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import github.projectgroup.receptoria.domain.dtos.CreateRecipeRequest;
 import github.projectgroup.receptoria.domain.dtos.RecipeDTO;
-import github.projectgroup.receptoria.domain.dtos.UserPreviewDTO;
-import github.projectgroup.receptoria.domain.enities.RecipePhoto;
-import github.projectgroup.receptoria.domain.enities.RecipeIngredients;
 import github.projectgroup.receptoria.domain.enities.User;
 import github.projectgroup.receptoria.domain.enities.UserRecipe;
 import github.projectgroup.receptoria.domain.enums.CookingMethod;
@@ -17,13 +18,17 @@ import github.projectgroup.receptoria.repositories.RecipeRepository;
 import github.projectgroup.receptoria.repositories.UserRepository;
 import github.projectgroup.receptoria.repositories.SavedRecipeRepository;
 import github.projectgroup.receptoria.services.interfaces.RecipeService;
-import github.projectgroup.receptoria.utils.result.Result;
-import github.projectgroup.receptoria.utils.result.ResultCase;
-import github.projectgroup.receptoria.utils.result.RecipeNotFoundCase;
-import github.projectgroup.receptoria.utils.result.SuccessCase;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -32,33 +37,13 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final SavedRecipeRepository savedRecipeRepository;
     private final UserRepository userRepository;
+    private final RecipeMapper recipeMapper;
+
+    @Value("${app.upload.dir}")
+    private String uploadDir;
 
     private RecipeDTO toDto(UserRecipe r) {
-        RecipeDTO dto = new RecipeDTO();
-        dto.setId(r.getId());
-        dto.setIngredients(r.getIngredients());
-        dto.setDescription(r.getDescription());
-        dto.setInstruction(r.getInstructions());
-        dto.setPortionSize(r.getPortionSize());
-        dto.setMethod(r.getMethod());
-        dto.setCategory(r.getCategory());
-        dto.setPhotos(r.getPhotos());
-
-        // Тут використовуємо UserPreviewDTO з його полями firstName та lastName
-        UserPreviewDTO ownerDto = new UserPreviewDTO();
-        ownerDto.setId(r.getOwner().getId());
-        ownerDto.setFirstName(r.getOwner().getFirstName());
-        ownerDto.setLastName(r.getOwner().getLastName());
-        dto.setOwner(ownerDto);
-
-        if (r.getCoOwner() != null) {
-            UserPreviewDTO coOwnerDto = new UserPreviewDTO();
-            coOwnerDto.setId(r.getCoOwner().getId());
-            coOwnerDto.setFirstName(r.getCoOwner().getFirstName());
-            coOwnerDto.setLastName(r.getCoOwner().getLastName());
-            dto.setCoOwner(coOwnerDto);
-        }
-        return dto;
+        return recipeMapper.toDto(r);
     }
 
     @Override
@@ -67,7 +52,6 @@ public class RecipeServiceImpl implements RecipeService {
                 .map(userRecipe -> Result.success(toDto(userRecipe), new SuccessCase(null)))
                 .orElseGet(()->Result.failure(new RecipeNotFoundCase(id)));
     }
-
 
     @Override
     public Page<UserRecipe> getAllByUserId(Long userId, Pageable pageable) {
@@ -83,7 +67,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Page<UserRecipe> findAllSorted(List<String> ingredients, String cookingMethod, Pageable pageable) {
-        // 1) Конвертуємо рядок у CookingMethod
         CookingMethod methodEnum;
         try {
             methodEnum = CookingMethod.valueOf(cookingMethod.toUpperCase());
@@ -102,103 +85,181 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Result<RecipeDTO> create(CreateRecipeRequest request) {
-        // 1) Знайти власника
-        User owner = userRepository.findById(request.getOwnerId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "User not found: " + request.getOwnerId()
-                ));
+        Result<User> owner = userRepository.findById(request.getOwnerId())
+                .map(user -> Result.success(user, new SuccessCase(null)))
+                .orElseGet(() -> Result.failure(new UserNotFoundCase(request.getOwnerId())));
 
-        // 2) Знайти співвласника (якщо вказано)
-        User coOwner = null;
+        Result<User> coOwner = null;
         if (request.getCoOwnerId() != null) {
             coOwner = userRepository.findById(request.getCoOwnerId())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Co-owner not found: " + request.getCoOwnerId()
-                    ));
+                    .map(user -> Result.success(user, new SuccessCase(null)))
+                    .orElseGet(() -> Result.failure(new UserNotFoundCase(request.getCoOwnerId())));
         }
 
-        // 3) Побудувати ентіті рецепту
-        UserRecipe recipe = UserRecipe.builder()
-                .ingredients(request.getIngredients())
-                .description(request.getDescription())
-                // Якщо в тебе є поле instructions — додай в CreateRecipeRequest відповідне,
-                // або ж поки поклади пустий рядок:
-                .instructions("")
-                .portionSize(request.getPortionSize())
-                .method(request.getMethod())
-                .category(null)         // якщо необхідно — додай в CreateRecipeRequest
-                .owner(owner)
-                .coOwner(coOwner)
-                .isPublic(false)        // за замовчуванням приватний
-                .build();
+        if (owner.isSuccess() && (coOwner == null || coOwner.isSuccess())){
+            List<MultipartFile> photos = request.getPhotos();
+            if (photos != null && photos.size() > 5) {
+                return Result.failure(new BadArgumentsCase("Creation failed: more than 5 photos uploaded"));
+            }
 
-        // 4) Зберегти, щоб отримати ID
-        UserRecipe saved = recipeRepository.save(recipe);
+            UserRecipe recipe = UserRecipe.builder()
+                    .ingredients(request.getIngredients())
+                    .description(request.getDescription())
+                    .instructions(request.getInstructions())
+                    .portionSize(request.getPortionSize())
+                    .method(request.getMethod())
+                    .category(request.getCategory())
+                    .owner(owner.getValue())
+                    .coOwner(
+                            coOwner != null
+                                    ? coOwner.getValue()
+                                    : null
+                    )
+                    .isPublic(false)
+                    .build();
 
-        // 5) Додати фото, якщо є шляхи
-        if (request.getPhotoPaths() != null && !request.getPhotoPaths().isEmpty()) {
-            final UserRecipe recipeForPhotos = saved;
-            List<RecipePhoto> photos = request.getPhotoPaths().stream()
-                    .map(pathStr -> {
-                        RecipePhoto p = new RecipePhoto();
-                        p.setRecipe(recipeForPhotos);
-                        p.setFilePath(pathStr);
-                        p.setFileName(Path.of(pathStr).getFileName().toString());
-                        p.setContentType(null);  // або визначати по розширенню
-                        return p;
-                    })
-                    .toList();
+            recipe = recipeRepository.save(recipe);
 
-            saved.setPhotos(photos);
-            saved = recipeRepository.save(saved);
+            if (photos != null && !photos.isEmpty()) {
+                Path recipeFolder = Paths.get(uploadDir, recipe.getId().toString());
+                try {
+                    if (!Files.exists(recipeFolder)) {
+                        Files.createDirectories(recipeFolder);
+                    }
+                } catch (IOException e) {
+                    throw new ResponseStatusException(
+                            HttpStatus.INTERNAL_SERVER_ERROR,
+                            "Unable to create folder for images"
+                    );
+                }
+
+                List<String> savedPaths = new ArrayList<>();
+                for (MultipartFile file : photos) {
+                    if (file.isEmpty()) continue;
+                    String contentType = file.getContentType();
+                    if (contentType == null || !contentType.startsWith("image/")) {
+                        continue;
+                    }
+
+                    // Оригінальне ім'я (щоб відобразити у клієнті, можемо додати до DTO, якщо буде потрібно)
+                    String originalName = file.getOriginalFilename();
+                    // Розширення (наприклад, ".jpg")
+                    String ext = "";
+                    if (originalName != null && originalName.contains(".")) {
+                        ext = originalName.substring(originalName.lastIndexOf("."));
+                    }
+
+                    // Генеруємо унікальне імя файлу
+                    String uniqueName = UUID.randomUUID().toString() + ext;
+
+                    // Повний шлях: uploads/recipes/{recipeId}/{uniqueName}
+                    Path destination = recipeFolder.resolve(uniqueName);
+                    try {
+                        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        // Якщо не вдалося зберегти хоча б одне фото,
+                        // можемо вирішити: або кинути виняток (відкат транзакції),
+                        // або просто пропустити цей файл (і зберегти решту).
+                        throw new ResponseStatusException(
+                                HttpStatus.INTERNAL_SERVER_ERROR,
+                                "Не вдалося зберегти фото: " + originalName
+                        );
+                    }
+
+                    String url = "/uploads/recipes/" + recipe.getId() + "/" + uniqueName;
+                    savedPaths.add(url);
+                }
+
+                // Заповнюємо у UserRecipe поле photoPaths, і JPA збереже в таблиці recipe_photos
+                recipe.setPhotoPaths(savedPaths);
+                recipeRepository.save(recipe);
+            }
+
+            return Result.success(toDto(recipe), new SuccessCase("Recipe created successfully"));
         }
-
-        // 6) Маппінг в DTO
-        RecipeDTO dto = toDto(saved);
-
-        // 7) Повернути обгортку Result; використовуй відповідний ResultCase
-        return Result.success(dto, new SuccessCase("Recipe created successfully"));
+        return Result.failure(new UserNotFoundCase(coOwner.isSuccess()?request.getOwnerId():request.getCoOwnerId()));
     }
     @Override
-    public Result<RecipeDTO> update(RecipeDTO request) {
-        // 1) Знайти існуючий рецепт
-        UserRecipe existing = recipeRepository.findById(request.getId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Recipe not found: " + request.getId()
-                ));
+    public Result<RecipeDTO> update(Long id, CreateRecipeRequest request) {
+        UserRecipe existing = recipeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Recipe not found: " + id));
 
-        // 2) Оновити поля
         existing.setIngredients(request.getIngredients());
         existing.setDescription(request.getDescription());
-        existing.setInstructions(request.getInstruction());
+        existing.setInstructions(request.getInstructions());
         existing.setPortionSize(request.getPortionSize());
         existing.setMethod(request.getMethod());
         existing.setCategory(request.getCategory());
 
-        // 3) Оновити coOwner (якщо прийшов новий)
-        if (request.getCoOwner() != null) {
-            Long coOwnerId = request.getCoOwner().getId();
-            User coOwner = userRepository.findById(coOwnerId)
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Co-owner not found: " + coOwnerId
-                    ));
+        // Обновляем coOwner, если передан
+        if (request.getCoOwnerId() != null) {
+            User coOwner = userRepository.findById(request.getCoOwnerId())
+                    .orElseThrow(() -> new IllegalArgumentException("Co-owner not found: " + request.getCoOwnerId()));
             existing.setCoOwner(coOwner);
         } else {
             existing.setCoOwner(null);
         }
 
-        // 4) (опційно) якщо треба оновити фото, то заміни список photoPaths аналогічно create(...)
-        //    наприклад:
-        //    existing.getPhotos().clear();
-        //    for (RecipePhoto p : convertFromDtoPhotos(request.getPhotos())) { … }
+        // Обработка фотографий
+        List<MultipartFile> newPhotos = request.getPhotos();
+        if (newPhotos != null) {
+            if (newPhotos.size() > 5) {
+                return Result.failure(new BadArgumentsCase("Update failed: more than 5 photos uploaded"));
+            }
 
-        // 5) Зберегти оновлений рецепт
+            // 1) Удаляем старые файлы с диска (если они были)
+            List<String> oldPaths = existing.getPhotoPaths();
+            if (oldPaths != null && !oldPaths.isEmpty()) {
+                for (String oldUrl : oldPaths) {
+                    String relative = oldUrl.replaceFirst("^/uploads/recipes/", "");
+                    Path oldFile = Paths.get(uploadDir).resolve(relative);
+                    try {
+                        Files.deleteIfExists(oldFile);
+                    } catch (IOException ignored) { }
+                }
+            }
+            existing.getPhotoPaths().clear();
+
+            // 2) Готовим папку (uploads/recipes/{id})
+            Path recipeFolder = Paths.get(uploadDir, existing.getId().toString());
+            try {
+                if (!Files.exists(recipeFolder)) {
+                    Files.createDirectories(recipeFolder);
+                }
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to create folder for images");
+            }
+
+            // 3) Сохраняем новые файлы и собираем новые пути
+            List<String> savedPaths = new ArrayList<>();
+            for (MultipartFile file : newPhotos) {
+                if (file.isEmpty()) continue;
+                String contentType = file.getContentType();
+                if (contentType == null || !contentType.startsWith("image/")) {
+                    continue;
+                }
+                String originalName = file.getOriginalFilename();
+                String ext = "";
+                if (originalName != null && originalName.contains(".")) {
+                    ext = originalName.substring(originalName.lastIndexOf("."));
+                }
+                String uniqueName = UUID.randomUUID().toString() + ext;
+                Path destination = recipeFolder.resolve(uniqueName);
+                try {
+                    Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to save photo: " + originalName);
+                }
+                String url = "/uploads/recipes/" + existing.getId() + "/" + uniqueName;
+                savedPaths.add(url);
+            }
+            existing.setPhotoPaths(savedPaths);
+        }
+
         UserRecipe saved = recipeRepository.save(existing);
-
-        // 6) Змоделити DTO і повернути успіх
-        RecipeDTO dto = toDto(saved);
-        return Result.success(dto, new SuccessCase("Recipe updated successfully"));
+        return Result.success(recipeMapper.toDto(saved), new SuccessCase("Recipe updated successfully"));
     }
+
 
 
     @Override
