@@ -12,19 +12,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // виключаємо CSRF
                 .csrf(csrf -> csrf.disable())
-
-                // дозволяємо всі запити без аутентифікації
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
-
-                // виключаємо Basic Auth і Form Login
                 .httpBasic(Customizer.withDefaults())  // залишаємо стандартну заготовку…
                 .formLogin(Customizer.withDefaults());
 
-        // і відключаємо їхню обробку
         http.httpBasic(basic -> basic.disable());
         http.formLogin(form -> form.disable());
 

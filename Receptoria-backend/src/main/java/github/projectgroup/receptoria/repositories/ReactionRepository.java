@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
-    // Повертає всі реакції для заданого рецепту із пагінацією
     Page<Reaction> findAllByRatedRecipeId(Long recipeId, Pageable pageable);
     Page<Reaction> findAllByOwnerId(Long ownerId, Pageable pageable);
 }

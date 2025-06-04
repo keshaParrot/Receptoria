@@ -17,6 +17,5 @@ public class ReactionDTO {
     private Long id;
     private float reactionValue;
     private String content;
-
     private UserPreviewDTO user;
 }

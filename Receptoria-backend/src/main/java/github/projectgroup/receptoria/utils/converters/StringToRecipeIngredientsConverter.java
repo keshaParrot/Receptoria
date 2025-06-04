@@ -10,7 +10,6 @@ public class StringToRecipeIngredientsConverter
 
     @Override
     public RecipeIngredients convert(String source) {
-        // Приклад: "Tomato:2pcs" → product="Tomato", quantity="2pcs"
         String[] parts = source.split(":", 2);
         return RecipeIngredients.builder()
                 .product(parts[0])
