@@ -20,7 +20,7 @@ public class RecipeDTO {
     private Long id;
     private List<RecipeIngredients> ingredients;
     private String description;
-    private String instruction;
+    private String instructions;
     private int portionSize;
     private CookingMethod method;
     private MealCategory category;

@@ -18,9 +18,15 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface RecipeMapper {
 
-    @Mapping(source = "instructions", target = "instruction")
+    @Mapping(source = "description", target = "description", qualifiedByName = "extractString")
+    @Mapping(source = "instructions", target = "instructions", qualifiedByName = "extractString")
     @Mapping(source = "photoPaths", target = "photos", qualifiedByName = "mapPhotoPathsToInfos")
     RecipeDTO toDto(UserRecipe recipe);
+
+    @Named("extractString")
+    default String extractString(String string) {
+        return string;
+    }
 
     @Named("mapPhotoPathsToInfos")
     default List<RecipePhotoInfo> mapPhotoPathsToInfos(List<String> photoPaths) {
