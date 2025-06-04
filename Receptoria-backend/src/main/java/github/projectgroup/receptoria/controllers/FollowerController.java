@@ -1,7 +1,8 @@
 package github.projectgroup.receptoria.controllers;
 
-import github.projectgroup.receptoria.domain.enums.Followtype;
+import github.projectgroup.receptoria.model.enums.Followtype;
 import org.springframework.data.domain.Page;
+
 
 public class FollowerController {
 

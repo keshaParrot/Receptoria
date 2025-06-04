@@ -1,16 +1,7 @@
 package github.projectgroup.receptoria.controllers;
 
-import github.projectgroup.receptoria.domain.dtos.CreateRecipeRequest;
-import github.projectgroup.receptoria.domain.dtos.RecipeDTO;
-import github.projectgroup.receptoria.domain.dtos.UserRecipePreviewDTO;
-import github.projectgroup.receptoria.domain.enities.RecipeIngredients;
-import github.projectgroup.receptoria.domain.enities.UserRecipe;
-import github.projectgroup.receptoria.domain.mappers.ResultMapper;
-import github.projectgroup.receptoria.services.interfaces.RecipeService;
-
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
+import github.projectgroup.receptoria.model.dtos.UserRecipePreviewDTO;
+import github.projectgroup.receptoria.model.enities.UserRecipe;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
