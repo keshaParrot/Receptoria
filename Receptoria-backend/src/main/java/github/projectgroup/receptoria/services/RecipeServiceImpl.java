@@ -1,6 +1,11 @@
 package github.projectgroup.receptoria.services;
 
-import github.projectgroup.receptoria.domain.mappers.RecipeMapper;
+import github.projectgroup.receptoria.model.dtos.CreateRecipeRequest;
+import github.projectgroup.receptoria.model.dtos.RecipeDTO;
+import github.projectgroup.receptoria.model.enities.User;
+import github.projectgroup.receptoria.model.enities.UserRecipe;
+import github.projectgroup.receptoria.model.enums.CookingMethod;
+import github.projectgroup.receptoria.model.mappers.RecipeMapper;
 import github.projectgroup.receptoria.utils.result.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,11 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import github.projectgroup.receptoria.domain.dtos.CreateRecipeRequest;
-import github.projectgroup.receptoria.domain.dtos.RecipeDTO;
-import github.projectgroup.receptoria.domain.enities.User;
-import github.projectgroup.receptoria.domain.enities.UserRecipe;
-import github.projectgroup.receptoria.domain.enums.CookingMethod;
 import github.projectgroup.receptoria.repositories.RecipeRepository;
 import github.projectgroup.receptoria.repositories.UserRepository;
 import github.projectgroup.receptoria.repositories.SavedRecipeRepository;

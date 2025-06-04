@@ -1,4 +1,4 @@
-package github.projectgroup.receptoria.domain.dtos;
+package github.projectgroup.receptoria.model.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

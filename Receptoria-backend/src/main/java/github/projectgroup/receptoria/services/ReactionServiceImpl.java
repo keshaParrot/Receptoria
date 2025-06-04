@@ -1,12 +1,13 @@
 package github.projectgroup.receptoria.services;
 
-import github.projectgroup.receptoria.domain.dtos.CreateReactionRequest;
-import github.projectgroup.receptoria.domain.dtos.ReactionDTO;
-import github.projectgroup.receptoria.domain.dtos.RecipeDTO;
-import github.projectgroup.receptoria.domain.dtos.UserPreviewDTO;
-import github.projectgroup.receptoria.domain.enities.Reaction;
-import github.projectgroup.receptoria.domain.enities.User;
-import github.projectgroup.receptoria.domain.enities.UserRecipe;
+
+import github.projectgroup.receptoria.model.dtos.CreateReactionRequest;
+import github.projectgroup.receptoria.model.dtos.ReactionDTO;
+import github.projectgroup.receptoria.model.dtos.UserPreviewDTO;
+import github.projectgroup.receptoria.model.enities.Reaction;
+import github.projectgroup.receptoria.model.enities.User;
+import github.projectgroup.receptoria.model.enities.UserRecipe;
+import github.projectgroup.receptoria.model.mappers.ReactionMapper;
 import github.projectgroup.receptoria.repositories.ReactionRepository;
 import github.projectgroup.receptoria.repositories.UserRepository;
 import github.projectgroup.receptoria.repositories.RecipeRepository;
@@ -31,6 +32,7 @@ public class ReactionServiceImpl implements ReactionService {
     private final ReactionRepository reactionRepository;
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
+    private final ReactionMapper reactionMapper;
 
     @Override
     public Page<ReactionDTO> getByRecipeId(Long recipeId, Pageable pageable) {
@@ -104,17 +106,6 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     private ReactionDTO toDto(Reaction r) {
-        UserPreviewDTO userDto = new UserPreviewDTO(
-                r.getOwner().getId(),
-                r.getOwner().getFirstName(),
-                r.getOwner().getLastName()
-        );
-
-        ReactionDTO dto = new ReactionDTO();
-        dto.setId(r.getId());
-        dto.setReactionValue(r.getReactionValue());
-        dto.setContent(r.getContent());
-        dto.setUser(userDto);
-        return dto;
+        return reactionMapper.toDto(r);
     }
 }

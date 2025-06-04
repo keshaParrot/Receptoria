@@ -1,13 +1,13 @@
 package github.projectgroup.receptoria.repositories;
 
 import github.projectgroup.receptoria.model.enities.UserRecipe;
+import github.projectgroup.receptoria.model.enums.CookingMethod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import github.projectgroup.receptoria.domain.enities.UserRecipe;
 
 import java.util.List;
 import java.util.Optional;
