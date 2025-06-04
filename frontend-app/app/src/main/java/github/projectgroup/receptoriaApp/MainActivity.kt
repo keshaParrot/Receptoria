@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import github.projectgroup.receptoriaApp.di.NetworkModule
 import github.projectgroup.receptoriaApp.presentation.auth.*
 import github.projectgroup.receptoriaApp.ui.theme.ReceptoriaTheme
 
@@ -34,7 +35,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AuthNavigation() {
     val navController = rememberNavController()
-    val authViewModel: AuthViewModel = viewModel()
+
+    // Создаем ViewModel с фабрикой
+    val authViewModel: AuthViewModel = viewModel(
+        factory = AuthViewModelFactory(NetworkModule.authRepository)
+    )
+
     val uiState by authViewModel.uiState.collectAsState()
 
     NavHost(

@@ -22,8 +22,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import github.projectgroup.receptoriaApp.theme.Orange500
-import github.projectgroup.receptoriaApp.theme.Green500
+import github.projectgroup.receptoriaApp.ui.theme.Orange500
+import github.projectgroup.receptoriaApp.ui.theme.Green500
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
