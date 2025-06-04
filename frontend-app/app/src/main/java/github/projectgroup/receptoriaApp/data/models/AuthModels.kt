@@ -32,3 +32,13 @@ data class ApiResponse(
     val success: Boolean,
     val message: String?
 )
+
+// Добавляем AuthUiState для SimpleAuthViewModel
+data class AuthUiState(
+    val isLoading: Boolean = false,
+    val isLoggedIn: Boolean = false,
+    val token: String? = null,
+    val userId: Long? = null,
+    val errorMessage: String? = null,
+    val successMessage: String? = null
+)
