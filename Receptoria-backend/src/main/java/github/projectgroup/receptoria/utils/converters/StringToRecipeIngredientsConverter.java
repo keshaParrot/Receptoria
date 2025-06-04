@@ -1,7 +1,7 @@
 package github.projectgroup.receptoria.utils.converters;
 
+import github.projectgroup.receptoria.model.enities.RecipeIngredients;
 import org.springframework.core.convert.converter.Converter;
-import github.projectgroup.receptoria.domain.enities.RecipeIngredients;
 import org.springframework.stereotype.Component;
 
 @Component

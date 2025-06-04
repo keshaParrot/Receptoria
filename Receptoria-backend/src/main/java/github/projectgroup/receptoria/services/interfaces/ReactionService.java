@@ -1,8 +1,8 @@
 package github.projectgroup.receptoria.services.interfaces;
 
-import github.projectgroup.receptoria.domain.dtos.CreateReactionRequest;
-import github.projectgroup.receptoria.domain.dtos.ReactionDTO;
-import github.projectgroup.receptoria.domain.dtos.RecipeDTO;
+
+import github.projectgroup.receptoria.model.dtos.CreateReactionRequest;
+import github.projectgroup.receptoria.model.dtos.ReactionDTO;
 import github.projectgroup.receptoria.utils.result.Result;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

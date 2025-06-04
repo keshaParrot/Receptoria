@@ -1,9 +1,9 @@
-// src/main/java/github/projectgroup/receptoria/repositories/SavedRecipeRepository.java
 package github.projectgroup.receptoria.repositories;
 
-import github.projectgroup.receptoria.domain.enities.SavedRecipe;
-import github.projectgroup.receptoria.domain.enities.UserRecipe;
 
+
+import github.projectgroup.receptoria.model.enities.SavedRecipe;
+import github.projectgroup.receptoria.model.enities.UserRecipe;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,25 +1,44 @@
 package github.projectgroup.receptoria.controllers;
 
-import github.projectgroup.receptoria.model.enities.Reaction;
+import github.projectgroup.receptoria.model.dtos.CreateReactionRequest;
+import github.projectgroup.receptoria.model.mappers.ResultMapper;
+import github.projectgroup.receptoria.services.interfaces.ReactionService;
 
+import github.projectgroup.receptoria.utils.result.Result;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/reactions")
+@RequiredArgsConstructor
 public class ReactionController {
 
-    public Reaction reactRecipe(
-            Long recipeId,
-            Long userId,
-            float rating,
-            String comment
+    private final ReactionService reactionService;
+
+    @PostMapping
+    public ResponseEntity<?> reactRecipe(
+            @RequestBody CreateReactionRequest request
     ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return ResultMapper.toResponseEntity(reactionService.create(request));
     }
-    public Reaction reactRecipe(
-            Long reactId,
-            String newContent,
-            float newRating
-    ){
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> reactRecipe(
+            @PathVariable Long id,
+            @RequestParam float newRating
+    ) {
+        return ResultMapper.toResponseEntity(reactionService.update(id, newRating));
     }
-    public void deleteReaction(Long reactId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReaction(@PathVariable("id") Long reactId) {
+        boolean deleted = reactionService.deleteById(reactId);
+        if (deleted) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

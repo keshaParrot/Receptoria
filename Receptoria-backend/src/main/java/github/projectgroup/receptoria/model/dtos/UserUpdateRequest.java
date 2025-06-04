@@ -1,6 +1,7 @@
 package github.projectgroup.receptoria.model.dtos;
 
 import github.projectgroup.receptoria.model.enums.MealCategory;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,6 @@ public class UserUpdateRequest {
     private String lastName;
     private String username;
     private String email;
-    private List<MealCategory> mainMealCategories; //MAX 3
+    @Size(max = 3)
+    private List<MealCategory> mainMealCategories;
 }

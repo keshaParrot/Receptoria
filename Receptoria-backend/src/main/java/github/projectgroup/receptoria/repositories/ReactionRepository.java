@@ -1,7 +1,6 @@
-// src/main/java/github/projectgroup/receptoria/repositories/ReactionRepository.java
 package github.projectgroup.receptoria.repositories;
 
-import github.projectgroup.receptoria.domain.enities.Reaction;
+import github.projectgroup.receptoria.model.enities.Reaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

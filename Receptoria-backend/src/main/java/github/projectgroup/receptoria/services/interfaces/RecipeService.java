@@ -1,8 +1,9 @@
 package github.projectgroup.receptoria.services.interfaces;
 
-import github.projectgroup.receptoria.domain.dtos.CreateRecipeRequest;
-import github.projectgroup.receptoria.domain.dtos.RecipeDTO;
-import github.projectgroup.receptoria.domain.enities.UserRecipe;
+
+import github.projectgroup.receptoria.model.dtos.CreateRecipeRequest;
+import github.projectgroup.receptoria.model.dtos.RecipeDTO;
+import github.projectgroup.receptoria.model.enities.UserRecipe;
 import github.projectgroup.receptoria.utils.result.Result;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

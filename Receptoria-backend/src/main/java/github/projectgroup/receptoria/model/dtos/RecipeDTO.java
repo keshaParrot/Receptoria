@@ -7,7 +7,6 @@ import github.projectgroup.receptoria.model.enums.MealCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import github.projectgroup.receptoria.domain.dtos.RecipePhotoInfo;
 
 import java.util.List;
 
