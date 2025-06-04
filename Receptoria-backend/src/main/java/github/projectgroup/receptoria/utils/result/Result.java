@@ -37,4 +37,12 @@ public class Result<T> {
     public boolean isCaseInstanceOf(Class<? extends ResultCase> clazz){
         return clazz.isInstance(resultCase);
     }
+
+    public ResultCase getResultCase(){
+        return resultCase;
+    }
+
+    public boolean isValuePresent() {
+        return value != null;
+    }
 }

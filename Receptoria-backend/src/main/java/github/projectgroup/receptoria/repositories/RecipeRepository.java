@@ -1,7 +1,6 @@
 package github.projectgroup.receptoria.repositories;
 
-import github.projectgroup.receptoria.domain.enities.RecipeIngredients;
-import github.projectgroup.receptoria.domain.enums.CookingMethod;
+import github.projectgroup.receptoria.model.enities.UserRecipe;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
