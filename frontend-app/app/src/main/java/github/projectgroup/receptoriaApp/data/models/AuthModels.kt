@@ -22,13 +22,13 @@ data class ChangePasswordRequest(
 
 @Serializable
 data class AuthResponse(
-    val token: String? = null,
-    val message: String? = null,
-    val success: Boolean = false
+    val success: Boolean,
+    val token: String?,
+    val message: String?
 )
 
 @Serializable
 data class ApiResponse(
-    val message: String,
-    val success: Boolean
+    val success: Boolean,
+    val message: String?
 )

@@ -2,7 +2,7 @@ package github.projectgroup.receptoriaApp.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.receptoria.data.repository.AuthRepository
+import github.projectgroup.receptoriaApp.data.repository.AuthRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

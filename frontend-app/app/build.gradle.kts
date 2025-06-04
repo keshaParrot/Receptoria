@@ -1,7 +1,8 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose") // Этот плагин обязателен для Kotlin 2.0+
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -27,65 +28,66 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
+    }
+
+    // Для Kotlin 2.0+ этот блок можно убрать или оставить пустым
+    composeOptions {
+        // kotlinCompilerExtensionVersion управляется автоматически плагином
     }
 }
 
 dependencies {
-        // ======================================================
-        // 1) Core & Lifecycle & Activity
-        // ======================================================
-        implementation("androidx.core:core-ktx:1.12.0")
-        implementation("androidx.appcompat:appcompat:1.7.0")
-        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-        implementation("androidx.activity:activity-compose:1.8.0")
+    // Compose BOM для управления версиями
+    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
 
-        // ======================================================
-        // 2) Compose UI & Tooling
-        // ======================================================
-        implementation("androidx.compose.ui:ui:1.5.0")
-        implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")
-        debugImplementation("androidx.compose.ui:ui-tooling:1.5.0")
-        debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.0")
+    // Core Android
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
+    implementation("androidx.activity:activity-compose:1.9.2")
 
-        // ======================================================
-        // 3) Material 3 (NavigationBar, Material3-компоненты и т.д.)
-        // ======================================================
-        implementation("androidx.compose.material3:material3:1.2.0")
-        // Если вам нужны дополнительные утилиты из Material3, можно добавить:
-        // implementation("androidx.compose.material3:material3-window-size-class:1.2.0")
+    // Compose UI
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
 
-        // ======================================================
-        // 4) Material 2 (Scaffold, TopAppBar, TextField и т.д.)
-        // ======================================================
-        implementation("androidx.compose.material:material:1.5.0")
-        implementation("androidx.compose.material:material-icons-core:1.5.0")
-        implementation("androidx.compose.material:material-icons-extended:1.5.0")
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.8.2")
 
-        // ======================================================
-        // 5) Navigation for Compose
-        // ======================================================
-        implementation("androidx.navigation:navigation-compose:2.7.0")
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
 
-        // ======================================================
-        // 6) Unit-тесты (JVM JUnit)
-        // ======================================================
-        testImplementation("junit:junit:4.13.2")
+    // Ktor
+    implementation("io.ktor:ktor-client-core:2.3.12")
+    implementation("io.ktor:ktor-client-okhttp:2.3.12")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
 
-        // ======================================================
-        // 7) Инструментальные androidTest
-        // ======================================================
-        androidTestImplementation("androidx.test.ext:junit:1.1.5")
-        androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
-        androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-        androidTestImplementation("androidx.test:runner:1.5.2")
-        androidTestImplementation("androidx.test:rules:1.5.0")
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    // Testing
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
+    // Compose Testing
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.10.00"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
