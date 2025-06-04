@@ -56,12 +56,7 @@ public interface RecipeService {
      */
     Result<RecipeDTO> create(CreateRecipeRequest request);
 
-    /**
-     * Оновити існуючий рецепт.
-     * @param request дані для оновлення
-     * @return оновлений рецепт у вигляді DTO
-     */
-    Result<RecipeDTO> update(RecipeDTO request);
+    Result<RecipeDTO> update(Long id, CreateRecipeRequest request);
 
     /**
      * Видалити рецепт за ID.
