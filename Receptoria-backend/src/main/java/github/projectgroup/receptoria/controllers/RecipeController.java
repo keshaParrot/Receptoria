@@ -71,7 +71,7 @@ public class RecipeController {
         return ResultMapper.toResponseEntity(recipeService.getById(id));
     }
 
-    @PreAuthorize("@userSecurity.canEdit(authentication, #id)")
+    @PreAuthorize("@recipeSecurity.canEdit(authentication, #id)")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(
             @PathVariable Long id,
@@ -92,7 +92,7 @@ public class RecipeController {
         return ResultMapper.toResponseEntity(recipeService.create(dto));
     }
 
-    @PreAuthorize("@userSecurity.canEdit(authentication, #id)")
+    @PreAuthorize("@recipeSecurity.canEdit(authentication, #id)")
     @PutMapping(path = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateRecipe(
             @PathVariable Long id,
@@ -102,7 +102,7 @@ public class RecipeController {
         return ResultMapper.toResponseEntity(recipeService.update(id,request));
     }
 
-    @PreAuthorize("@userSecurity.canEdit(authentication, #id)")
+    @PreAuthorize("@recipeSecurity.canEdit(authentication, #id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecipe(
             @PathVariable Long id
@@ -115,7 +115,7 @@ public class RecipeController {
         }
     }
 
-    @PreAuthorize("@userSecurity.canEdit(authentication, #id)")
+    @PreAuthorize("@recipeSecurity.canEdit(authentication, #id)")
     @PatchMapping("/{id}/public")
     public ResponseEntity<Void> setPublicStatus(
             @PathVariable Long id,

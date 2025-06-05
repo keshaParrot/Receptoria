@@ -3,7 +3,6 @@ package github.projectgroup.receptoria.security.resource;
 import github.projectgroup.receptoria.model.enities.User;
 import github.projectgroup.receptoria.repositories.UserRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
