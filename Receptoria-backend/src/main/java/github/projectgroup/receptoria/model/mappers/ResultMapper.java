@@ -1,5 +1,6 @@
 package github.projectgroup.receptoria.model.mappers;
 
+import github.projectgroup.receptoria.model.dtos.ServerErrorResponse;
 import github.projectgroup.receptoria.utils.result.BadArgumentsCase;
 import github.projectgroup.receptoria.utils.result.RecipeNotFoundCase;
 import github.projectgroup.receptoria.utils.result.Result;
@@ -25,7 +26,11 @@ public class ResultMapper {
             if (result.getMessage()==null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             else
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        ServerErrorResponse.builder()
+                                .message(result.getMessage())
+                                .build()
+                );
 
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

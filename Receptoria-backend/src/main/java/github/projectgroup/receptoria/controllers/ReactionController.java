@@ -8,6 +8,7 @@ import github.projectgroup.receptoria.utils.result.Result;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,14 +25,16 @@ public class ReactionController {
         return ResultMapper.toResponseEntity(reactionService.create(request));
     }
 
+    @PreAuthorize("@reactionSecurity.canEdit(authentication, #id)")
     @PutMapping("/{id}")
-    public ResponseEntity<?> reactRecipe(
+    public ResponseEntity<?> updateRecipe(
             @PathVariable Long id,
             @RequestParam float newRating
     ) {
         return ResultMapper.toResponseEntity(reactionService.update(id, newRating));
     }
 
+    @PreAuthorize("@reactionSecurity.canEdit(authentication, #id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReaction(@PathVariable("id") Long reactId) {
         boolean deleted = reactionService.deleteById(reactId);
