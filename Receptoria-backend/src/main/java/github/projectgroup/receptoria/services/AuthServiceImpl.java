@@ -3,6 +3,7 @@ package github.projectgroup.receptoria.services;
 import github.projectgroup.receptoria.model.dtos.ChangePasswordRequest;
 import github.projectgroup.receptoria.model.dtos.LoginRequest;
 import github.projectgroup.receptoria.model.dtos.UserRegisterRequest;
+import github.projectgroup.receptoria.model.dtos.ValidationErrorResponse;
 import github.projectgroup.receptoria.model.enities.User;
 import github.projectgroup.receptoria.model.enities.VerificationCode;
 import github.projectgroup.receptoria.model.enums.SendTo;
@@ -18,6 +19,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -47,13 +50,18 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        Result<VerificationCode> codeResult = verificationCodeService.generateVerificationCode(
-                user.getEmail(),
-                SendTo.EMAIL,
-                VerificationCodeType.VERIFICATION_MAIL);
-        notificationService.sendVerificationCode(codeResult.getValue(),user.getEmail());
+        sendVerificationMailCode(user.getEmail());
 
         return Result.success(null,new SuccessCase("User successfully registered"));
+    }
+
+    @Override
+    public void sendVerificationMailCode(String email){
+        Result<VerificationCode> codeResult = verificationCodeService.generateVerificationCode(
+                email,
+                SendTo.EMAIL,
+                VerificationCodeType.VERIFICATION_MAIL);
+        notificationService.sendVerificationCode(codeResult.getValue(),email);
     }
 
     @Override

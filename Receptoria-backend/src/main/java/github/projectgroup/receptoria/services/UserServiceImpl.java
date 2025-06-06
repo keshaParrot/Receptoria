@@ -3,6 +3,7 @@ package github.projectgroup.receptoria.services;
 import github.projectgroup.receptoria.model.dtos.ChangePasswordRequest;
 import github.projectgroup.receptoria.model.dtos.UserDTO;
 import github.projectgroup.receptoria.model.dtos.UserUpdateRequest;
+import github.projectgroup.receptoria.model.dtos.ValidationErrorResponse;
 import github.projectgroup.receptoria.model.enities.User;
 import github.projectgroup.receptoria.model.enities.UserRecipe;
 import github.projectgroup.receptoria.model.enums.MealCategory;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service

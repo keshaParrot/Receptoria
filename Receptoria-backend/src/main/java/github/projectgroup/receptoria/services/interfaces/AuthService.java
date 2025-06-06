@@ -8,6 +8,9 @@ import github.projectgroup.receptoria.utils.result.Result;
 
 public interface AuthService {
     Result<Void> registerUser(UserRegisterRequest request);
+
+    void sendVerificationMailCode(String email);
+
     Result<String> authenticateUser(LoginRequest request);
 
     Result<?> sendResetPasswordRequest(String email);
